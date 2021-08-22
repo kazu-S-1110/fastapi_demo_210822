@@ -1,11 +1,13 @@
 from fastapi import APIRouter
+from typing import List
+import api.schemas.task as task_schema  # modelsのものはtask_modelとして区別するために読み替えてimportする
 
 router = APIRouter()
 
 
-@router.get("/tasks")
+@router.get("/tasks", response_model=List[task_schema.Task])
 async def list_tasks():
-    pass
+    return [task_schema.Task(id=1, title="first task")]
 
 
 @router.post("/tasks")

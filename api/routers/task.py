@@ -9,14 +9,15 @@ router = APIRouter()
 
 
 @router.get("/tasks", response_model=List[task_schema.Task])
-async def list_tasks():
-    return [task_schema.Task(id=1, title="first task")]
-
+async def list_tasks(db: AsyncSession = Depends(get_db)):
+    return await task_crud.get_tasks_with_done(db)
 
 # @router.post("/tasks", response_model=task_schema.TaskCreateResponse)
 # async def create_task(task_body: task_schema.TaskCreate):
 #     # **を使用してキーワード引数として展開、つまり**task_body.dict()はtitle=task_body.title, done=task_body.doneになる
 #     return task_schema.TaskCreateResponse(id=1, **task_body.dict())
+
+
 @router.post("/tasks", response_model=task_schema.TaskCreateResponse)
 async def create_task(
     task_body: task_schema.TaskCreate, db: AsyncSession = Depends(get_db)
